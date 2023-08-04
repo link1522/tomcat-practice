@@ -94,16 +94,5 @@
         </plugin>
       </plugins>
     </pluginManagement>
-
-    <!-- <resources>
-      <resource>
-        <directory>${project.basedir}/src/main/java</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*.properties</include>
-          <include>**/*.java</include>
-        </includes>
-      </resource>
-    </resources> -->
   </build>
 </project>
