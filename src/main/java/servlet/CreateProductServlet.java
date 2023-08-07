@@ -25,5 +25,7 @@ public class CreateProductServlet extends HttpServlet {
 
     ProductDAO productDAO = new ProductDAOImpl();
     productDAO.create(new Product(name, price, description));
+
+    response.sendRedirect("product");
   }
 }
