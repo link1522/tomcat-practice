@@ -2,23 +2,4 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
-
-  <servlet>
-    <servlet-name>CreateProductServlet</servlet-name>
-    <servlet-class>CreateProductServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>DebugServlet</servlet-name>
-    <servlet-class>DebugServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>CreateProductServlet</servlet-name>
-    <url-pattern>/createProduct</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>DebugServlet</servlet-name>
-    <url-pattern>/debug</url-pattern>
-  </servlet-mapping>
 </web-app>
