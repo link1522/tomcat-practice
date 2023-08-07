@@ -2,30 +2,24 @@ package utils;
 
 import java.io.InputStream;
 import java.sql.Connection;
+import java.util.Properties;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.mysql.cj.jdbc.Driver;
+import javax.sql.DataSource;
+
+import com.alibaba.druid.pool.DruidDataSourceFactory;
 
 public class JDBCUtils {
-  private static DruidDataSource dataSource = null;
+  private static DataSource dataSource = null;
   private static InputStream dbPropsIs = null;
 
   static {
     try {
-      // TODO load config by .properties file
-      // dbPropsIs = ClassLoader.getSystemResourceAsStream("/WEB-INF/db.properties");
-      // FileInputStream fis = new FileInputStream("./db.properties");
+      dbPropsIs = Thread.currentThread().getContextClassLoader().getResourceAsStream("db.properties");
 
-      // Properties dbProps = new Properties();
-      // dbProps.load(dbPropsIs);
+      Properties dbProps = new Properties();
+      dbProps.load(dbPropsIs);
 
-      // dataSource = DruidDataSourceFactory.createDataSource(dbProps);
-
-      dataSource = new DruidDataSource();
-      dataSource.setDriver(new Driver());
-      dataSource.setUrl("jdbc:mysql:///test");
-      dataSource.setUsername("root");
-      dataSource.setPassword("root");
+      dataSource = DruidDataSourceFactory.createDataSource(dbProps);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
