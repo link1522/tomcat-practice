@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>edit product</title>
+
+    <link rel="stylesheet" th:href="@{/css/product.css}" />
+  </head>
+  <body>
+    <h1>edit product</h1>
+    <form
+      th:action="@{/editProduct}"
+      method="POST"
+      class="form"
+      accept-charset="UTF-8"
+      th:object="${product}"
+    >
+      <input type="hidden" name="id" th:value="*{id}" />
+      <label for="name">
+        Name:
+        <input id="name" type="text" name="name" th:value="*{name}" />
+      </label>
+
+      <label for="price">
+        Price:
+        <input id="price" type="number" name="price" th:value="*{price}" />
+      </label>
+
+      <label for="description">
+        Description
+        <input
+          id="description"
+          type="text"
+          name="description"
+          th:value="*{description}"
+        />
+      </label>
+
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </body>
+</html>

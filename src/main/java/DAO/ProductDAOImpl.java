@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import entity.Product;
@@ -53,5 +54,50 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     return null;
+  }
+
+  @Override
+  public Product getById(int id) {
+    Connection conn = null;
+
+    try {
+      conn = JDBCUtils.getConnection();
+      QueryRunner queryRunner = new QueryRunner();
+
+      String sql = "select * from products where id = ?";
+      BeanHandler<Product> handler = new BeanHandler<>(Product.class);
+
+      Product product = queryRunner.query(conn, sql, handler, id);
+
+      return product;
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DbUtils.closeQuietly(conn, null, null);
+    }
+
+    return null;
+  }
+
+  @Override
+  public int update(Product product) {
+    Connection conn = null;
+
+    try {
+      conn = JDBCUtils.getConnection();
+      QueryRunner queryRunner = new QueryRunner();
+
+      String sql = "update products set name = ?, price = ?, description = ? where id = ?";
+
+      return queryRunner.execute(conn, sql, product.getName(), product.getPrice(), product.getDescription(),
+          product.getId());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DbUtils.closeQuietly(conn, null, null);
+    }
+
+    return 0;
   }
 }

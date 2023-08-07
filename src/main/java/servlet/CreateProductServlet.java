@@ -24,7 +24,7 @@ public class CreateProductServlet extends HttpServlet {
     String description = request.getParameter("description");
 
     ProductDAO productDAO = new ProductDAOImpl();
-    productDAO.create(new Product(name, price, description));
+    productDAO.create(new Product(0, name, price, description));
 
     response.sendRedirect("product");
   }

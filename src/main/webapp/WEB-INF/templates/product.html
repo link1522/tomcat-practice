@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>test tomcat</title>
+    <title>Products</title>
 
     <link rel="stylesheet" th:href="@{/css/product.css}" />
   </head>
   <body>
     <h1>create product</h1>
     <form
-      action="createProduct"
+      th:action="@{/createProduct}"
       method="POST"
       class="form"
       accept-charset="UTF-8"
@@ -20,18 +20,18 @@
         <input id="name" type="text" name="name" />
       </label>
 
-      <label for="prcie">
+      <label for="price">
         Price:
         <input id="price" type="number" name="price" />
       </label>
 
       <label for="description">
-        description
+        Description
         <input id="description" type="text" name="description" />
       </label>
 
       <div>
-        <button type="submit">submit</button>
+        <button type="submit">Submit</button>
       </div>
     </form>
 
@@ -42,15 +42,20 @@
         <span>name</span>
         <span>price</span>
         <span>description</span>
+        <span>action</span>
       </div>
-      <div
-        th:each="product : ${#request.getAttribute('productList')}"
-        class="list_row"
-      >
+      <div th:each="product : ${productList}" class="list_row">
         <span th:text="${product.id}">id</span>
-        <span th:text="${product.name}">name</span>
+        <span
+          ><a
+            th:text="${product.name}"
+            th:href="@{/editProduct(id=${product.id})}"
+            >name</a
+          ></span
+        >
         <span th:text="${product.price}">price</span>
         <span th:text="${product.description}">description</span>
+        <span><button>x</button></span>
       </div>
     </div>
   </body>
