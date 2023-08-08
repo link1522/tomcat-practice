@@ -14,6 +14,8 @@ import entity.Product;
 
 @WebServlet("/createProduct")
 public class CreateProductServlet extends HttpServlet {
+  private ProductDAO productDAO = new ProductDAOImpl();
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     request.setCharacterEncoding("UTF-8");
@@ -23,7 +25,6 @@ public class CreateProductServlet extends HttpServlet {
     int price = Integer.parseInt(priceStr);
     String description = request.getParameter("description");
 
-    ProductDAO productDAO = new ProductDAOImpl();
     productDAO.create(new Product(0, name, price, description));
 
     response.sendRedirect("product");

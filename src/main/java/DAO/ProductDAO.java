@@ -9,7 +9,13 @@ public interface ProductDAO {
 
   List<Product> getAll();
 
+  List<Product> getPageList(int perPage, int page);
+
   Product getById(int id);
 
+  long totalCount();
+
   int update(Product product);
+
+  int deleteById(int id);
 }

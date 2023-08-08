@@ -46,17 +46,33 @@
       </div>
       <div th:each="product : ${productList}" class="list_row">
         <span th:text="${product.id}">id</span>
-        <span
-          ><a
+        <span>
+          <a
             th:text="${product.name}"
             th:href="@{/editProduct(id=${product.id})}"
             >name</a
-          ></span
-        >
+          >
+        </span>
         <span th:text="${product.price}">price</span>
         <span th:text="${product.description}">description</span>
-        <span><button>x</button></span>
+        <span>
+          <button th:onclick="|deleteProduct(${product.id})|">x</button>
+        </span>
       </div>
     </div>
+
+    <div class="pagination">
+      <span th:text="|${page} / ${totalPage}|"></span>
+      <a th:if="${page - 1 > 0}" th:href="@{/product(page=${page - 1})}"
+        >prev</a
+      >
+      <a
+        th:if="${page + 1 <= totalPage}"
+        th:href="@{/product(page=${page + 1})}"
+        >next</a
+      >
+    </div>
+
+    <script th:src="@{/js/product.js}"></script>
   </body>
 </html>

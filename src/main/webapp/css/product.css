@@ -20,3 +20,14 @@
   display: grid;
   grid-template-columns: 1fr 2fr 2fr 3fr 1fr;
 }
+
+.pagination {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.pagination {
+  text-decoration: none;
+}
