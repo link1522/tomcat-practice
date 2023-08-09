@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,7 +22,7 @@ import org.w3c.dom.NodeList;
 import utils.StringUtils;
 
 @WebServlet("*.do")
-public class DispatcherServlet extends HttpServlet {
+public class DispatcherServlet extends ViewBaseServlet {
     private Map<String, Object> beanMap = new HashMap<>();
 
     @Override
@@ -74,11 +73,19 @@ public class DispatcherServlet extends HttpServlet {
         }
 
         try {
-            Method declaredMethod = controllerBeanObj.getClass().getDeclaredMethod(operate, HttpServletRequest.class,
-                    HttpServletResponse.class);
+            Method declaredMethod = controllerBeanObj.getClass().getDeclaredMethod(operate, HttpServletRequest.class);
 
             if (declaredMethod != null) {
-                declaredMethod.invoke(controllerBeanObj);
+                Object returnObj = declaredMethod.invoke(controllerBeanObj, req);
+                if (returnObj instanceof String returnStr) {
+                    if (returnStr.startsWith("redirect:")) {
+                        String redirectStr = returnStr.substring("redirect:".length());
+                        resp.sendRedirect(redirectStr);
+                    } else {
+                        processTemplate(returnStr, req, resp);
+                    }
+
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
