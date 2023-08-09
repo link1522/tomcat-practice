@@ -10,7 +10,7 @@
   <body>
     <h1>create product</h1>
     <form
-      th:action="@{/product(operate=create)}"
+      th:action="@{/product.do(operate=create)}"
       method="POST"
       class="form"
       accept-charset="UTF-8"
@@ -37,7 +37,7 @@
 
     <h2>Product List</h2>
 
-    <form th:action="@{/product(page=1)}" method="GET" class="search">
+    <form th:action="@{/product.do(page=1)}" method="GET" class="search">
       Keyword:
       <input type="text" name="keyword" />
       <button type="submit">Search</button>
@@ -56,7 +56,7 @@
         <span>
           <a
             th:text="${product.name}"
-            th:href="@{/product(operate=edit, id=${product.id})}"
+            th:href="@{/product.do(operate=edit, id=${product.id})}"
             >name</a
           >
         </span>
@@ -72,12 +72,12 @@
       <span th:text="|${page} / ${totalPage}|"></span>
       <a
         th:if="${page - 1 > 0}"
-        th:href="@{/product(page=${page - 1}, keyword=${keyword})}"
+        th:href="@{/product.do(page=${page - 1}, keyword=${keyword})}"
         >prev</a
       >
       <a
         th:if="${page + 1 <= totalPage}"
-        th:href="@{/product(page=${page + 1}, keyword=${keyword})}"
+        th:href="@{/product.do(page=${page + 1}, keyword=${keyword})}"
         >next</a
       >
     </div>

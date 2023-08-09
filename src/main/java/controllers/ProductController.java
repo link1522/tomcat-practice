@@ -1,4 +1,4 @@
-package servlet;
+package controllers;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -12,39 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 import DAO.ProductDAO;
 import DAO.ProductDAOImpl;
 import entity.Product;
+import servlet.ViewBaseServlet;
 import utils.StringUtils;
 
-@WebServlet("/product")
-public class ProductServlet extends ViewBaseServlet {
+@SuppressWarnings("unused")
+public class ProductController extends ViewBaseServlet {
     private ProductDAO productDAO = new ProductDAOImpl();
     private final int perPage = 5;
-
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-
-        String operate = req.getParameter("operate");
-
-        if (StringUtils.isEmpty(operate)) {
-            operate = "index";
-        }
-
-        Method[] declaredMethods = this.getClass().getDeclaredMethods();
-
-        for (Method method : declaredMethods) {
-            String methodName = method.getName();
-            if (methodName.equals(operate)) {
-                try {
-                    method.invoke(this, req, resp);
-                    return;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        index(req, resp);
-    }
 
     private void index(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pageStr = req.getParameter("page");
@@ -57,11 +31,13 @@ public class ProductServlet extends ViewBaseServlet {
 
         int page = Integer.parseInt(pageStr);
 
+        long totalCount;
         if (StringUtils.isEmpty(keyword)) {
-            totalPage = (int) (Math.ceil((double) productDAO.totalCount() / perPage));
+            totalCount = productDAO.totalCount();
         } else {
-            totalPage = (int) (Math.ceil((double) productDAO.totalCount(keyword) / perPage));
+            totalCount = productDAO.totalCount(keyword);
         }
+        totalPage = (int) (Math.ceil((double) totalCount / perPage));
 
         if (page > totalPage) {
             pageRedirect(resp, totalPage, keyword);
@@ -82,9 +58,9 @@ public class ProductServlet extends ViewBaseServlet {
 
     private void pageRedirect(HttpServletResponse resp, int page, String keyword) throws IOException {
         if (StringUtils.isNotEmpty(keyword)) {
-            resp.sendRedirect("product?page=" + page + "&keyword=" + keyword);
+            resp.sendRedirect("product.do?page=" + page + "&keyword=" + keyword);
         } else {
-            resp.sendRedirect("product?page=" + page);
+            resp.sendRedirect("product.do?page=" + page);
         }
 
         return;
@@ -98,21 +74,21 @@ public class ProductServlet extends ViewBaseServlet {
 
         productDAO.create(new Product(0, name, price, description));
 
-        resp.sendRedirect("product");
+        resp.sendRedirect("product.do");
     }
 
     private void edit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
 
         if (StringUtils.isEmpty(id)) {
-            resp.sendRedirect("product");
+            resp.sendRedirect("product.do");
             return;
         }
 
         Product product = productDAO.getById(Integer.parseInt(id));
 
         if (product == null) {
-            resp.sendRedirect("product");
+            resp.sendRedirect("product.do");
             return;
         }
 
@@ -122,8 +98,6 @@ public class ProductServlet extends ViewBaseServlet {
     }
 
     private void update(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-
         String idStr = req.getParameter("id");
         int id = Integer.parseInt(idStr);
         String name = req.getParameter("name");
@@ -134,14 +108,14 @@ public class ProductServlet extends ViewBaseServlet {
         Product product = productDAO.getById(id);
 
         if (product == null) {
-            resp.sendRedirect("product");
+            resp.sendRedirect("product.do");
             return;
         }
 
         Product newProduct = new Product(id, name, price, description);
         productDAO.update(newProduct);
 
-        resp.sendRedirect("product");
+        resp.sendRedirect("product.do");
     }
 
     private void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -149,6 +123,6 @@ public class ProductServlet extends ViewBaseServlet {
 
         productDAO.deleteById(Integer.parseInt(id));
 
-        resp.sendRedirect("product");
+        resp.sendRedirect("product.do");
     }
 }

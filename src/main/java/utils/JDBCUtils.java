@@ -15,6 +15,8 @@ public class JDBCUtils {
   static {
     try {
       dbPropsIs = Thread.currentThread().getContextClassLoader().getResourceAsStream("db.properties");
+      // dbPropsIs =
+      // JDBCUtils.class.getClassLoader().getResourceAsStream("db.properties");
 
       Properties dbProps = new Properties();
       dbProps.load(dbPropsIs);
