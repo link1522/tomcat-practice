@@ -10,7 +10,7 @@
   <body>
     <h1>create product</h1>
     <form
-      th:action="@{/createProduct}"
+      th:action="@{/product(operate=create)}"
       method="POST"
       class="form"
       accept-charset="UTF-8"
@@ -36,11 +36,13 @@
     </form>
 
     <h2>Product List</h2>
-    <form action="product?page=1" method="GET">
+
+    <form th:action="@{/product(page=1)}" method="GET" class="search">
       Keyword:
       <input type="text" name="keyword" />
       <button type="submit">Search</button>
     </form>
+
     <div class="list">
       <div class="list_row list_title">
         <span>id</span>
@@ -54,7 +56,7 @@
         <span>
           <a
             th:text="${product.name}"
-            th:href="@{/editProduct(id=${product.id})}"
+            th:href="@{/product(operate=edit, id=${product.id})}"
             >name</a
           >
         </span>

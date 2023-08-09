@@ -1,5 +1,5 @@
 const deleteProduct = id => {
-  if (confirm('是否要刪除?')) {
-    location.href = `deleteProduct?id=${id}`;
+  if (confirm('Are you sure to delete the product?')) {
+    location.href = `product?operate=delete&id=${id}`;
   }
 };

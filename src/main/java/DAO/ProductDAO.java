@@ -17,6 +17,8 @@ public interface ProductDAO {
 
   long totalCount();
 
+  long totalCount(String keyword);
+
   int update(Product product);
 
   int deleteById(int id);

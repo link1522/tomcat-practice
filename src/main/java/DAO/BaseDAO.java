@@ -15,90 +15,90 @@ import utils.JDBCUtils;
 
 @SuppressWarnings("unchecked")
 public class BaseDAO<T> {
-  private Class<T> clazz = null;
-  private QueryRunner queryRunner = new QueryRunner();
+    private Class<T> clazz = null;
+    private QueryRunner queryRunner = new QueryRunner();
 
-  {
-    Type genericSuperclass = this.getClass().getGenericSuperclass();
-    ParameterizedType paramType = (ParameterizedType) genericSuperclass;
+    {
+        Type genericSuperclass = this.getClass().getGenericSuperclass();
+        ParameterizedType paramType = (ParameterizedType) genericSuperclass;
 
-    Type[] typeArguments = paramType.getActualTypeArguments();
+        Type[] typeArguments = paramType.getActualTypeArguments();
 
-    clazz = (Class<T>) typeArguments[0];
-  }
-
-  public T queryOne(String sql, Object... args) {
-    Connection conn = null;
-
-    try {
-      conn = JDBCUtils.getConnection();
-
-      BeanHandler<T> handler = new BeanHandler<>(clazz);
-
-      T item = queryRunner.query(conn, sql, handler, args);
-
-      return item;
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      DbUtils.closeQuietly(conn, null, null);
+        clazz = (Class<T>) typeArguments[0];
     }
 
-    return null;
-  }
+    public T queryOne(String sql, Object... args) {
+        Connection conn = null;
 
-  public List<T> queryMany(String sql, Object... args) {
-    Connection conn = null;
+        try {
+            conn = JDBCUtils.getConnection();
 
-    try {
-      conn = JDBCUtils.getConnection();
+            BeanHandler<T> handler = new BeanHandler<>(clazz);
 
-      BeanListHandler<T> handler = new BeanListHandler<>(clazz);
+            T item = queryRunner.query(conn, sql, handler, args);
 
-      List<T> list = queryRunner.query(conn, sql, handler, args);
+            return item;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(conn, null, null);
+        }
 
-      return list;
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      DbUtils.closeQuietly(conn, null, null);
+        return null;
     }
 
-    return null;
-  }
+    public List<T> queryMany(String sql, Object... args) {
+        Connection conn = null;
 
-  public int execute(String sql, Object... args) {
-    Connection conn = null;
+        try {
+            conn = JDBCUtils.getConnection();
 
-    try {
-      conn = JDBCUtils.getConnection();
+            BeanListHandler<T> handler = new BeanListHandler<>(clazz);
 
-      return queryRunner.execute(conn, sql, args);
+            List<T> list = queryRunner.query(conn, sql, handler, args);
 
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      DbUtils.closeQuietly(conn, null, null);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(conn, null, null);
+        }
+
+        return null;
     }
 
-    return 0;
-  }
+    public int execute(String sql, Object... args) {
+        Connection conn = null;
 
-  public <E> E queryOther(String sql, Object... args) {
-    Connection conn = null;
-    try {
-      conn = JDBCUtils.getConnection();
+        try {
+            conn = JDBCUtils.getConnection();
 
-      ScalarHandler<E> handler = new ScalarHandler<>();
-      E data = queryRunner.query(conn, sql, handler, args);
+            return queryRunner.execute(conn, sql, args);
 
-      return data;
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      DbUtils.closeQuietly(conn, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(conn, null, null);
+        }
+
+        return 0;
     }
 
-    return null;
-  }
+    public <E> E queryOther(String sql, Object... args) {
+        Connection conn = null;
+        try {
+            conn = JDBCUtils.getConnection();
+
+            ScalarHandler<E> handler = new ScalarHandler<>();
+            E data = queryRunner.query(conn, sql, handler, args);
+
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(conn, null, null);
+        }
+
+        return null;
+    }
 }
