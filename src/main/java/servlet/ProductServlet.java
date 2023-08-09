@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -28,26 +29,21 @@ public class ProductServlet extends ViewBaseServlet {
             operate = "index";
         }
 
-        switch (operate) {
-            case "index":
-                index(req, resp);
-                break;
-            case "create":
-                create(req, resp);
-                break;
-            case "edit":
-                edit(req, resp);
-                break;
-            case "update":
-                update(req, resp);
-                break;
-            case "delete":
-                delete(req, resp);
-                break;
-            default:
-                index(req, resp);
-                break;
+        Method[] declaredMethods = this.getClass().getDeclaredMethods();
+
+        for (Method method : declaredMethods) {
+            String methodName = method.getName();
+            if (methodName.equals(operate)) {
+                try {
+                    method.invoke(this, req, resp);
+                    return;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
+        index(req, resp);
     }
 
     private void index(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
