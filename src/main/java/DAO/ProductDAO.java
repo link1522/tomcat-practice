@@ -11,6 +11,8 @@ public interface ProductDAO {
 
   List<Product> getPageList(int perPage, int page);
 
+  List<Product> getPageList(int perPage, int page, String keyword);
+
   Product getById(int id);
 
   long totalCount();

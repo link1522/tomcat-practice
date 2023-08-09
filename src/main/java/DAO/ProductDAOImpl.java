@@ -3,6 +3,7 @@ package DAO;
 import java.util.List;
 
 import entity.Product;
+import utils.StringUtils;
 
 public class ProductDAOImpl extends BaseDAO<Product> implements ProductDAO {
   @Override
@@ -26,6 +27,21 @@ public class ProductDAOImpl extends BaseDAO<Product> implements ProductDAO {
     String sql = "select * from products limit ?, ?";
     int skip = (page - 1) * perPage;
     List<Product> list = queryMany(sql, skip, perPage);
+
+    return list;
+  }
+
+  @Override
+  public List<Product> getPageList(int perPage, int page, String keyword) {
+    if (StringUtils.isEmpty(keyword)) {
+      keyword = "";
+    }
+
+    keyword = "%" + keyword + "%";
+
+    String sql = "select * from products where name like ? or description like ? limit ?, ?";
+    int skip = (page - 1) * perPage;
+    List<Product> list = queryMany(sql, keyword, keyword, skip, perPage);
 
     return list;
   }

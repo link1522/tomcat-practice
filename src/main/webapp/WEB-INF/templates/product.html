@@ -36,6 +36,11 @@
     </form>
 
     <h2>Product List</h2>
+    <form action="product?page=1" method="GET">
+      Keyword:
+      <input type="text" name="keyword" />
+      <button type="submit">Search</button>
+    </form>
     <div class="list">
       <div class="list_row list_title">
         <span>id</span>
@@ -63,12 +68,14 @@
 
     <div class="pagination">
       <span th:text="|${page} / ${totalPage}|"></span>
-      <a th:if="${page - 1 > 0}" th:href="@{/product(page=${page - 1})}"
+      <a
+        th:if="${page - 1 > 0}"
+        th:href="@{/product(page=${page - 1}, keyword=${keyword})}"
         >prev</a
       >
       <a
         th:if="${page + 1 <= totalPage}"
-        th:href="@{/product(page=${page + 1})}"
+        th:href="@{/product(page=${page + 1}, keyword=${keyword})}"
         >next</a
       >
     </div>

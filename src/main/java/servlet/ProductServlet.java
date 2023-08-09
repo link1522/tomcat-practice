@@ -20,7 +20,10 @@ public class ProductServlet extends ViewBaseServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+
     String pageStr = req.getParameter("page");
+    String keyword = req.getParameter("keyword");
 
     if (StringUtils.isEmpty(pageStr)) {
       pageStr = "1";
@@ -30,23 +33,29 @@ public class ProductServlet extends ViewBaseServlet {
     int totalPage = (int) (Math.ceil((double) productDAO.totalCount() / perPage));
 
     if (page > totalPage) {
-      pageRedirect(resp, totalPage);
+      pageRedirect(resp, totalPage, keyword);
       return;
     } else if (page < 1) {
-      pageRedirect(resp, 1);
+      pageRedirect(resp, 1, keyword);
       return;
     }
 
-    List<Product> productList = productDAO.getPageList(5, page);
+    List<Product> productList = productDAO.getPageList(5, page, keyword);
     req.setAttribute("productList", productList);
     req.setAttribute("page", page);
     req.setAttribute("totalPage", totalPage);
+    req.setAttribute("keyword", keyword);
 
     processTemplate("product", req, resp);
   }
 
-  private void pageRedirect(HttpServletResponse resp, int page) throws IOException {
-    resp.sendRedirect("product?page=" + page);
+  private void pageRedirect(HttpServletResponse resp, int page, String keyword) throws IOException {
+    if (StringUtils.isNotEmpty(keyword)) {
+      resp.sendRedirect("product?page=" + page + "&keyword=" + keyword);
+    } else {
+      resp.sendRedirect("product?page=" + page);
+    }
+
     return;
   }
 }
