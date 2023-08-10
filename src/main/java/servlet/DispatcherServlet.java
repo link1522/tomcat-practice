@@ -27,6 +27,8 @@ public class DispatcherServlet extends ViewBaseServlet {
 
     @Override
     public void init() throws ServletException {
+        super.init();
+
         try {
             InputStream appContextIs = getClass().getClassLoader().getResourceAsStream("applicationContext.xml");
 

@@ -20,7 +20,7 @@ public class ProductController {
     private ProductDAO productDAO = new ProductDAOImpl();
     private final int perPage = 5;
 
-    private String index(HttpServletRequest req) {
+    public String index(HttpServletRequest req) {
         String pageStr = req.getParameter("page");
         String keyword = req.getParameter("keyword");
         int totalPage;
@@ -54,7 +54,7 @@ public class ProductController {
         return "product";
     }
 
-    private String create(HttpServletRequest req) {
+    public String create(HttpServletRequest req) {
         String name = req.getParameter("name");
         String priceStr = req.getParameter("price");
         int price = Integer.parseInt(priceStr);
@@ -65,7 +65,7 @@ public class ProductController {
         return "redirect:product.do";
     }
 
-    private String edit(HttpServletRequest req) {
+    public String edit(HttpServletRequest req) {
         String id = req.getParameter("id");
 
         if (StringUtils.isEmpty(id)) {
@@ -83,7 +83,7 @@ public class ProductController {
         return "edit";
     }
 
-    private String update(HttpServletRequest req) {
+    public String update(HttpServletRequest req) {
         String idStr = req.getParameter("id");
         int id = Integer.parseInt(idStr);
         String name = req.getParameter("name");
@@ -103,7 +103,7 @@ public class ProductController {
         return "redirect:product.do";
     }
 
-    private String delete(HttpServletRequest req) {
+    public String delete(HttpServletRequest req) {
         String id = req.getParameter("id");
 
         productDAO.deleteById(Integer.parseInt(id));
