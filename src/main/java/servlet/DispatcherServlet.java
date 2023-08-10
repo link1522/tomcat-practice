@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,36 +60,69 @@ public class DispatcherServlet extends ViewBaseServlet {
     }
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
 
-        String servletPath = req.getServletPath();
+        String servletPath = request.getServletPath();
         int dotDoIndex = servletPath.lastIndexOf(".do");
         servletPath = servletPath.substring(1, dotDoIndex);
 
         Object controllerBeanObj = beanMap.get(servletPath);
 
-        String operate = req.getParameter("operate");
+        String operate = request.getParameter("operate");
 
         if (StringUtils.isEmpty(operate)) {
             operate = "index";
         }
 
         try {
-            Method declaredMethod = controllerBeanObj.getClass().getDeclaredMethod(operate, HttpServletRequest.class);
+            Method[] controllerMethods = controllerBeanObj.getClass().getDeclaredMethods();
 
-            if (declaredMethod != null) {
-                Object returnObj = declaredMethod.invoke(controllerBeanObj, req);
-                if (returnObj instanceof String returnStr) {
-                    if (returnStr.startsWith("redirect:")) {
-                        String redirectStr = returnStr.substring("redirect:".length());
-                        resp.sendRedirect(redirectStr);
-                    } else {
-                        processTemplate(returnStr, req, resp);
+            for (Method method : controllerMethods) {
+                if (operate.equals(method.getName())) {
+                    Parameter[] params = method.getParameters();
+                    Object[] paramValues = new Object[params.length];
+
+                    for (int i = 0; i < params.length; i++) {
+                        String paramName = params[i].getName();
+
+                        if ("request".equals(paramName)) {
+                            paramValues[i] = request;
+                        } else if ("response".equals(paramName)) {
+                            paramValues[i] = response;
+                        } else if ("session".equals(paramName)) {
+                            paramValues[i] = request.getSession();
+                        } else {
+                            String paramTypeName = params[i].getType().getName();
+                            String paramStr = request.getParameter(paramName);
+
+                            if (paramStr == null) {
+                                paramValues[i] = paramStr;
+                            } else if ("java.lang.Integer".equals(paramTypeName)) {
+                                paramValues[i] = Integer.parseInt(paramStr);
+                            } else {
+                                paramValues[i] = paramStr;
+                            }
+
+                        }
                     }
 
+                    Object returnObj = method.invoke(controllerBeanObj, paramValues);
+
+                    if (returnObj instanceof String returnStr) {
+                        if (returnStr.startsWith("redirect:")) {
+                            String redirectStr = returnStr.substring("redirect:".length());
+                            response.sendRedirect(redirectStr);
+                        } else {
+                            processTemplate(returnStr, request, response);
+                        }
+                    }
+
+                    break;
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

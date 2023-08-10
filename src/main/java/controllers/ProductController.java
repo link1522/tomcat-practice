@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import DAO.ProductDAO;
 import DAO.ProductDAOImpl;
@@ -20,16 +19,12 @@ public class ProductController {
     private ProductDAO productDAO = new ProductDAOImpl();
     private final int perPage = 5;
 
-    public String index(HttpServletRequest req) {
-        String pageStr = req.getParameter("page");
-        String keyword = req.getParameter("keyword");
+    public String index(HttpServletRequest request, Integer page, String keyword) {
         int totalPage;
 
-        if (StringUtils.isEmpty(pageStr)) {
-            pageStr = "1";
+        if (page == null) {
+            page = 1;
         }
-
-        int page = Integer.parseInt(pageStr);
 
         long totalCount;
         if (StringUtils.isEmpty(keyword)) {
@@ -46,51 +41,33 @@ public class ProductController {
         }
 
         List<Product> productList = productDAO.getPageList(5, page, keyword);
-        req.setAttribute("productList", productList);
-        req.setAttribute("page", page);
-        req.setAttribute("totalPage", totalPage);
-        req.setAttribute("keyword", keyword);
+        request.setAttribute("productList", productList);
+        request.setAttribute("page", page);
+        request.setAttribute("totalPage", totalPage);
+        request.setAttribute("keyword", keyword);
 
         return "product";
     }
 
-    public String create(HttpServletRequest req) {
-        String name = req.getParameter("name");
-        String priceStr = req.getParameter("price");
-        int price = Integer.parseInt(priceStr);
-        String description = req.getParameter("description");
-
+    public String create(String name, Integer price, String description) {
         productDAO.create(new Product(0, name, price, description));
 
         return "redirect:product.do";
     }
 
-    public String edit(HttpServletRequest req) {
-        String id = req.getParameter("id");
-
-        if (StringUtils.isEmpty(id)) {
-            return "redirect:product.do";
-        }
-
-        Product product = productDAO.getById(Integer.parseInt(id));
+    public String edit(HttpServletRequest request, Integer id) {
+        Product product = productDAO.getById(id);
 
         if (product == null) {
             return "redirect:product.do";
         }
 
-        req.setAttribute("product", product);
+        request.setAttribute("product", product);
 
         return "edit";
     }
 
-    public String update(HttpServletRequest req) {
-        String idStr = req.getParameter("id");
-        int id = Integer.parseInt(idStr);
-        String name = req.getParameter("name");
-        String priceStr = req.getParameter("price");
-        int price = Integer.parseInt(priceStr);
-        String description = req.getParameter("description");
-
+    public String update(Integer id, String name, Integer price, String description) {
         Product product = productDAO.getById(id);
 
         if (product == null) {
@@ -103,10 +80,8 @@ public class ProductController {
         return "redirect:product.do";
     }
 
-    public String delete(HttpServletRequest req) {
-        String id = req.getParameter("id");
-
-        productDAO.deleteById(Integer.parseInt(id));
+    public String delete(Integer id) {
+        productDAO.deleteById(id);
 
         return "redirect:product.do";
     }
