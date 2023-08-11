@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans>
-    <bean id="product" class="controllers.ProductController" />
+    <bean id="productDAO" class="dao2.impl.ProductDAOImpl" />
+    <bean id="productService" class="services2.impl.ProductServiceImpl">
+        <!-- name 表示內部屬性名稱，ref 代表對應到的 bean (dao.impl.ProductDAOImpl) -->
+        <property name="productDAO" ref="productDAO" />
+    </bean>
+    <bean id="product" class="controllers.ProductController">
+        <property name="productService" ref="productService" />
+    </bean>
 </beans>

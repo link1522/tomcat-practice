@@ -10,17 +10,16 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 
-import DAO.ProductDAO;
-import DAO.Impl.ProductDAOImpl;
+import dao.ProductDAO;
+import dao.impl.ProductDAOImpl;
 import entity.Product;
 import services.ProductService;
-import services.Impl.ProductServiceImpl;
 import servlet.ViewBaseServlet;
 import utils.StringUtils;
 
 @SuppressWarnings("unused")
 public class ProductController {
-    private ProductService productService = new ProductServiceImpl();
+    private ProductService productService = null;
 
     public String index(HttpServletRequest request, Integer page, String keyword) {
         if (StringUtils.isEmpty(keyword)) {

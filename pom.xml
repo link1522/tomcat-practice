@@ -95,7 +95,7 @@
           <version>3.8.0</version>
           <configuration>
             <compilerArgs>
-              <arg>-parameter</arg>
+              <arg>-parameters</arg>
             </compilerArgs>
           </configuration>
         </plugin>

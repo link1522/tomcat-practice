@@ -1,14 +1,13 @@
-package services.Impl;
+package services.impl;
 
 import java.util.List;
 
-import DAO.ProductDAO;
-import DAO.Impl.ProductDAOImpl;
+import dao.ProductDAO;
 import entity.Product;
 import services.ProductService;
 
 public class ProductServiceImpl implements ProductService {
-    private ProductDAO productDAO = new ProductDAOImpl();
+    private ProductDAO productDAO = null;
     final private int perPage = 5;
 
     @Override
