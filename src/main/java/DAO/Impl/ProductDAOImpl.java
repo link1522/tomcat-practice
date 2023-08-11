@@ -1,7 +1,9 @@
-package DAO;
+package DAO.Impl;
 
 import java.util.List;
 
+import DAO.BaseDAO;
+import DAO.ProductDAO;
 import entity.Product;
 import utils.StringUtils;
 
