@@ -26,8 +26,6 @@ public class DispatcherServlet extends ViewBaseServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-
         String servletPath = request.getServletPath();
         int dotDoIndex = servletPath.lastIndexOf(".do");
         servletPath = servletPath.substring(1, dotDoIndex);
