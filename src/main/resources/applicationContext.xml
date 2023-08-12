@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans>
-    <bean id="productDAO" class="dao2.impl.ProductDAOImpl" />
-    <bean id="productService" class="services2.impl.ProductServiceImpl">
+    <bean id="productDAO" class="dao.impl.ProductDAOImpl" />
+    <bean id="productService" class="services.impl.ProductServiceImpl">
         <!-- name 表示內部屬性名稱，ref 代表對應到的 bean (dao.impl.ProductDAOImpl) -->
         <property name="productDAO" ref="productDAO" />
     </bean>
