@@ -1,4 +1,4 @@
-package io;
+package ioc;
 
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -14,12 +14,22 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.alibaba.druid.util.StringUtils;
+
 public class ClassPathXmlApplicationContext implements BeanFactory {
     private Map<String, Object> beanMap = new HashMap<>();
 
     public ClassPathXmlApplicationContext() {
+        this("applicationContext.xml");
+    }
+
+    public ClassPathXmlApplicationContext(String path) {
+        if (StringUtils.isEmpty(path)) {
+            throw new RuntimeException("path cannot be empty");
+        }
+
         try {
-            InputStream appContextIs = getClass().getClassLoader().getResourceAsStream("applicationContext.xml");
+            InputStream appContextIs = getClass().getClassLoader().getResourceAsStream(path);
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

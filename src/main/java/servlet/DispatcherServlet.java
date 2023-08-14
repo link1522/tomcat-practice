@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import exceptions.DispatchServletException;
-import io.BeanFactory;
-import io.ClassPathXmlApplicationContext;
+import ioc.BeanFactory;
 import utils.StringUtils;
 
 @WebServlet("*.do")
@@ -21,7 +20,14 @@ public class DispatcherServlet extends ViewBaseServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        beanFactory = new ClassPathXmlApplicationContext();
+
+        Object beanFactoryObj = getServletContext().getAttribute("beanFactory");
+
+        if (beanFactoryObj != null) {
+            beanFactory = (BeanFactory) beanFactoryObj;
+        } else {
+            throw new RuntimeException("Cannot get IOC container");
+        }
     }
 
     @Override
