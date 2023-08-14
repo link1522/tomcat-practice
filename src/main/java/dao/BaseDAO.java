@@ -3,14 +3,15 @@ package dao;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
+import exceptions.DAOException;
 import utils.JDBCUtils;
 
 @SuppressWarnings("unchecked")
@@ -28,77 +29,56 @@ public class BaseDAO<T> {
     }
 
     public T queryOne(String sql, Object... args) {
-        Connection conn = null;
-
         try {
-            conn = JDBCUtils.getConnection();
+            Connection conn = JDBCUtils.getConn();
 
             BeanHandler<T> handler = new BeanHandler<>(clazz);
 
             T item = queryRunner.query(conn, sql, handler, args);
 
             return item;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(conn, null, null);
+            throw new DAOException("BaseDAO exception in queryOne method");
         }
-
-        return null;
     }
 
     public List<T> queryMany(String sql, Object... args) {
-        Connection conn = null;
-
         try {
-            conn = JDBCUtils.getConnection();
+            Connection conn = JDBCUtils.getConn();
 
             BeanListHandler<T> handler = new BeanListHandler<>(clazz);
 
             List<T> list = queryRunner.query(conn, sql, handler, args);
 
             return list;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(conn, null, null);
+            throw new DAOException("BaseDAO exception in queryMany method");
         }
-
-        return null;
     }
 
     public int execute(String sql, Object... args) {
-        Connection conn = null;
-
         try {
-            conn = JDBCUtils.getConnection();
-
+            Connection conn = JDBCUtils.getConn();
             return queryRunner.execute(conn, sql, args);
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(conn, null, null);
+            throw new DAOException("BaseDAO exception in execute method");
         }
-
-        return 0;
     }
 
     public <E> E queryOther(String sql, Object... args) {
-        Connection conn = null;
         try {
-            conn = JDBCUtils.getConnection();
+            Connection conn = JDBCUtils.getConn();
 
             ScalarHandler<E> handler = new ScalarHandler<>();
             E data = queryRunner.query(conn, sql, handler, args);
 
             return data;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(conn, null, null);
+            throw new DAOException("BaseDAO exception in queryOther method");
         }
-
-        return null;
     }
 }

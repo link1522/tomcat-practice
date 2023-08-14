@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import exceptions.DispatchServletException;
 import io.BeanFactory;
 import io.ClassPathXmlApplicationContext;
 import utils.StringUtils;
@@ -87,6 +88,7 @@ public class DispatcherServlet extends ViewBaseServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new DispatchServletException("DispatchServlet error");
         }
     }
 }
